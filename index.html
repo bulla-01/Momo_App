@@ -157,24 +157,28 @@
     });
   }
 
-  async function fetchBeneficiaryName(phoneNumber) {
-    const nameField = document.getElementById("beneficiaryname");
-    try {
-      const res = await fetch(`${API_BASE_URL}/validate-beneficiary/${phoneNumber}`);
-      const data = await res.json();
+async function fetchBeneficiaryName(phoneNumber) {
+  const nameField = document.getElementById("beneficiaryname");
+  nameField.value = "Searching...";
+  nameField.readOnly = true; // still keep it readonly, but allow updates
 
-      if (data.success) {
-        nameField.value = data.full_name;
-      } else {
-        nameField.value = "Account Not Found";
-        alert("Beneficiary account not found.");
-      }
-    } catch (err) {
-      console.error("Error fetching beneficiary:", err);
-      nameField.value = "Account Not Found";
-      alert("Server error while fetching beneficiary.");
+  try {
+    const res = await fetch(`${API_BASE_URL}/validate-beneficiary/${phoneNumber}`);
+    const data = await res.json();
+
+    if (data.success) {
+      nameField.value = data.full_name;
+    } else {
+      nameField.value = "";
+      alert("❌ Beneficiary account not found.");
     }
+  } catch (err) {
+    console.error("Error fetching beneficiary:", err);
+    nameField.value = "";
+    alert("⚠️ Server error while fetching beneficiary.");
   }
+}
+
 
   async function fetchInitiatorInfo(phoneNumber) {
     const initiatorNumberDiv = document.getElementById("initiatorNumber");
@@ -290,6 +294,10 @@
 
   window.addEventListener("DOMContentLoaded", () => {
     addInputSearchListeners("beneficiaryphoneno", fetchBeneficiaryName);
+	document.getElementById("beneficiaryphoneno").addEventListener("input", () => {
+  const nameField = document.getElementById("beneficiaryname");
+  nameField.value = "";
+});
     addInputSearchListeners("initiatorphoneno", fetchInitiatorInfo);
   });
 </script>
