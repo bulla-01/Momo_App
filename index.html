@@ -4,130 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mobile Money Transaction</title>
-    <link rel="stylesheet" href="style.css" />
-	  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body class="bg-[#18102f] text-white font-sans min-h-screen flex flex-col">
-  <!-- Main Content -->
-  <main class="flex-1 py-10 px-4">
-
-	<div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
-
-      <!-- Sidebar -->
-      <aside class="bg-[#1f1533] p-6 rounded-xl shadow-lg space-y-6 text-sm">
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-white text-blue-700 font-bold rounded-full flex items-center justify-center">🕒</div>
-          <div>
-            <div class="uppercase text-gray-400 text-[10px]">Date & Time</div>
-            <div id="currentDateTime" class="text-sm font-semibold"></div>
-          </div>
-        </div>
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 border border-white rounded-full flex items-center justify-center">2</div>
-          <div>
-            <div class="uppercase text-gray-400 text-[10px]">Initiator Number</div>
-            <div id="initiatorNumber" class="text-sm font-semibold">Loading...</div>
-          </div>
-        </div>
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 border border-white rounded-full flex items-center justify-center">3</div>
-          <div>
-            <div class="uppercase text-gray-400 text-[10px]">Initiator Name</div>
-            <div id="initiatorName" class="text-sm font-semibold">Loading...</div>
-          </div>
-        </div>
-      </aside>
 
 
-<!-- Form -->
-<section class="md:col-span-2 bg-[#261c44] p-8 rounded-xl shadow-xl">
-  <div class="flex justify-between items-start mb-6">
-    <div>
-      <h2 class="text-lg font-bold text-yellow-300">Transaction Details</h2>
-      <p class="text-sm text-gray-300">Fill in your details to continue the payment.</p>
-    </div>
-    <div id="balanceAmount" class="text-sm text-blue-300 font-bold">
-      Balance: GHS 0.00
-    </div>
-  </div>
-
-  <form id="transactionForm" onsubmit="submitTransaction(event)" class="text-sm w-full">
-    <table class="w-full table-auto border-separate border-spacing-y-4 text-left">
-      <tbody>
-
-        <tr>
-          <td class="pr-4 w-1/2">
-            <input type="text" id="beneficiaryphoneno" name="nameDest" placeholder="Beneficiary Number" class="form-input w-full text-blue-900" required />
-          </td>
-          <td class="w-1/2">
-            <select name="type" class="form-input w-full text-blue-900 bg-white" required>
-              <option disabled selected class="text-gray-400">Payment Type</option>
-              <option class="text-blue-900">Transfer</option>
-              <option class="text-blue-900">Payment</option>
-              <option class="text-blue-900">Cash In</option>
-              <option class="text-blue-900">Cash Out</option>
-            </select>
-          </td>
-        </tr>
-
-        <tr>
-          <td class="pr-4">
-            <select name="mobilenetwork" class="form-input w-full text-blue-900 bg-white" required>
-              <option disabled selected class="text-gray-400">Mobile Network</option>
-              <option class="text-blue-900">MTN</option>
-              <option class="text-blue-900">Vodafone</option>
-              <option class="text-blue-900">AirtelTigo</option>
-            </select>
-          </td>
-          <td>
-            <input type="text" id="beneficiaryname" name="beneficiaryname" placeholder="Beneficiary Full Name" class="form-input w-full text-blue-900" readonly />
-          </td>
-        </tr>
-
-        <tr>
-          <td class="pr-4">
-            <input type="number" step="0.01" name="amount" placeholder="Amount (GHS)" class="form-input w-full text-blue-900" required />
-          </td>
-          <td>
-            <input type="text" id="initiatorphoneno" name="initiatorphone" placeholder="Initiator Phone" class="form-input w-full text-blue-900" required />
-          </td>
-        </tr>
-
-        <!-- Hidden Fields -->
-        <input type="hidden" name="oldbalanceOrg" id="oldbalanceOrg" />
-        <input type="hidden" name="newbalanceOrig" id="newbalanceOrig" />
-        <input type="hidden" name="newbalanceDest" id="newbalanceDest" />
-        <input type="hidden" name="step" id="step" value="1" />
-
-        <tr>
-          <td colspan="2" class="pt-6">
-            <button type="submit" class="w-full bg-yellow-400 text-black py-2 rounded-md font-semibold hover:bg-yellow-300 transition">
-              Submit Transaction
-            </button>
-          </td>
-        </tr>
-
-      </tbody>
-    </table>
-  </form>
-</section>
-
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-[#1a112f] py-4 text-center text-sm text-gray-400">
-    &copy; 2025 BentJun Mobile Money Platform Inc. All rights reserved.
-  </footer>
-  
-  <!-- JavaScript Section at the bottom (after HTML loaded) -->
+<!-- JavaScript Section at the bottom -->
 <script>
-  // Dynamically set API base URL based on environment
+  // Correct ternary operator
   const API_BASE_URL = window.location.hostname.includes("localhost")
-    : "https://fraud-detection-api-xioa.onrender.com"; 
+    ? "http://localhost:8000"
+    : "https://fraud-detection-api-xioa.onrender.com";
 
-  // Set Date and Time every second
+  // Update date/time display
   setInterval(() => {
     const now = new Date().toLocaleString();
     const timeDisplay = document.getElementById("currentDateTime");
@@ -156,31 +46,29 @@
     });
   }
 
-async function fetchBeneficiaryName(phoneNumber) {
-  const nameField = document.getElementById("beneficiaryname");
-  nameField.value = "Searching...";
-  nameField.readOnly = true; // still keep it readonly, but allow updates
+  async function fetchBeneficiaryName(phoneNumber) {
+    const nameField = document.getElementById("beneficiaryname");
+    nameField.value = "Searching...";
+    nameField.readOnly = true;
 
-  try {
-    const res = await fetch(`${API_BASE_URL}/validate-beneficiary/${phoneNumber}`);
-    const data = await res.json();
+    try {
+      const res = await fetch(`${API_BASE_URL}/validate-beneficiary/${phoneNumber}`);
+      const data = await res.json();
 
-    if (data.success) {
-      nameField.value = data.full_name;
-    } else {
+      if (data.success) {
+        nameField.value = data.full_name;
+      } else {
+        nameField.value = "";
+        nameField.placeholder = "Beneficiary not found";
+        nameField.readOnly = false;
+        alert("❌ Beneficiary account not found.");
+      }
+    } catch (err) {
+      console.error("Error fetching beneficiary:", err);
       nameField.value = "";
-      nameField.placeholder = "Beneficiary not found";
-      nameField.readOnly = false;
-      document.getElementById("beneficiaryphoneno").focus(); // optional
-      alert("❌ Beneficiary account not found.");
+      alert("⚠️ Server error while fetching beneficiary.");
     }
-  } catch (err) {
-    console.error("Error fetching beneficiary:", err);
-    nameField.value = "";
-    alert("⚠️ Server error while fetching beneficiary.");
   }
-}
-
 
   async function fetchInitiatorInfo(phoneNumber) {
     const initiatorNumberDiv = document.getElementById("initiatorNumber");
@@ -193,34 +81,32 @@ async function fetchBeneficiaryName(phoneNumber) {
 
       if (data.success) {
         const balance = parseFloat(data.balance).toFixed(2);
-        if (initiatorNumberDiv) initiatorNumberDiv.textContent = phoneNumber;
-        if (initiatorNameDiv) initiatorNameDiv.textContent = data.full_name || "Name not available";
-        if (balanceDisplay) balanceDisplay.innerText = `Balance: GHS ${balance}`;
+        initiatorNumberDiv.textContent = phoneNumber;
+        initiatorNameDiv.textContent = data.full_name || "Name not available";
+        balanceDisplay.innerText = `Balance: GHS ${balance}`;
 
         document.getElementById("oldbalanceOrg").value = balance;
         document.getElementById("newbalanceOrig").value = balance;
       } else {
-        if (initiatorNumberDiv) initiatorNumberDiv.textContent = "Not Found";
-        if (initiatorNameDiv) initiatorNameDiv.textContent = "Not Found";
-        if (balanceDisplay) balanceDisplay.innerText = "Balance: GHS 0.00";
+        initiatorNumberDiv.textContent = "Not Found";
+        initiatorNameDiv.textContent = "Not Found";
+        balanceDisplay.innerText = "Balance: GHS 0.00";
         alert("Initiator not found.");
       }
     } catch (err) {
       console.error("Error fetching initiator:", err);
-      if (initiatorNumberDiv) initiatorNumberDiv.textContent = "Error";
-      if (initiatorNameDiv) initiatorNameDiv.textContent = "Error";
-      if (balanceDisplay) balanceDisplay.innerText = "Balance: GHS 0.00";
+      initiatorNumberDiv.textContent = "Error";
+      initiatorNameDiv.textContent = "Error";
+      balanceDisplay.innerText = "Balance: GHS 0.00";
       alert("Server error while fetching initiator.");
     }
   }
 
   function resetFormState(form) {
     form.reset();
-
     document.getElementById("initiatorNumber").textContent = "";
     document.getElementById("initiatorName").textContent = "";
     document.getElementById("balanceAmount").innerText = "Balance: GHS 0.00";
-
     document.getElementById("beneficiaryname").value = "";
     document.getElementById("oldbalanceOrg").value = "";
     document.getElementById("newbalanceOrig").value = "";
@@ -289,21 +175,29 @@ async function fetchBeneficiaryName(phoneNumber) {
       alert("⚠️ Server error occurred.");
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Submit";
+      submitBtn.textContent = "Submit Transaction";
       form.dataset.submitting = "false";
     }
   }
 
+  // Ensure script executes only after DOM is loaded
   window.addEventListener("DOMContentLoaded", () => {
     addInputSearchListeners("beneficiaryphoneno", fetchBeneficiaryName);
-document.getElementById("beneficiaryphoneno").addEventListener("input", () => {
-  const nameField = document.getElementById("beneficiaryname");
-  nameField.value = "";
-  nameField.placeholder = "Fetching name...";
-  nameField.readOnly = true;
 
-  const phoneField = document.getElementById("beneficiaryphoneno");
-  phoneField.readOnly = false;
-});
+    document.getElementById("beneficiaryphoneno").addEventListener("input", () => {
+      const nameField = document.getElementById("beneficiaryname");
+      nameField.value = "";
+      nameField.placeholder = "Fetching name...";
+      nameField.readOnly = true;
+    });
+
+    document.getElementById("initiatorphoneno").addEventListener("blur", (e) => {
+      if (e.target.value.trim()) {
+        fetchInitiatorInfo(e.target.value.trim());
+      }
+    });
+  });
 </script>
 
+</body>
+</html>
