@@ -1,17 +1,16 @@
 # Use Nginx base image
-
 FROM nginx:stable-alpine
 
-COPY ./index.html /usr/share/nginx/html/index.html
-COPY ./images /usr/share/nginx/html/images
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom Nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Copy static files to Nginx's public directory
+COPY index.html /usr/share/nginx/html/
+COPY style.css /usr/share/nginx/html/
+COPY images/ /usr/share/nginx/html/images/
 
-
-# Expose port 80
+# Expose port
 EXPOSE 80
 
-# Start Nginx in foreground
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
-
-
