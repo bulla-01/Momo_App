@@ -170,6 +170,9 @@ async function fetchBeneficiaryName(phoneNumber) {
       nameField.value = data.full_name;
     } else {
       nameField.value = "";
+      nameField.placeholder = "Beneficiary not found";
+      nameField.readOnly = false;
+      document.getElementById("beneficiaryphoneno").focus(); // optional
       alert("❌ Beneficiary account not found.");
     }
   } catch (err) {
