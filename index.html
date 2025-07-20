@@ -125,7 +125,6 @@
 <script>
   // Dynamically set API base URL based on environment
   const API_BASE_URL = window.location.hostname.includes("localhost")
-    ? "http://localhost:8000"
     : "https://fraud-detection-api-xioa.onrender.com"; 
 
   // Set Date and Time every second
@@ -297,11 +296,14 @@ async function fetchBeneficiaryName(phoneNumber) {
 
   window.addEventListener("DOMContentLoaded", () => {
     addInputSearchListeners("beneficiaryphoneno", fetchBeneficiaryName);
-	document.getElementById("beneficiaryphoneno").addEventListener("input", () => {
+document.getElementById("beneficiaryphoneno").addEventListener("input", () => {
   const nameField = document.getElementById("beneficiaryname");
   nameField.value = "";
+  nameField.placeholder = "Fetching name...";
+  nameField.readOnly = true;
+
+  const phoneField = document.getElementById("beneficiaryphoneno");
+  phoneField.readOnly = false;
 });
-    addInputSearchListeners("initiatorphoneno", fetchInitiatorInfo);
-  });
 </script>
 
