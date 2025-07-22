@@ -4,308 +4,285 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mobile Money Transaction</title>
-    <link rel="stylesheet" href="style.css" />
-	  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-[#18102f] text-white font-sans min-h-screen flex flex-col">
-  <!-- Main Content -->
-  <main class="flex-1 py-10 px-4">
+<main class="flex-1 py-10 px-4">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
 
-	<div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
-
-      <!-- Sidebar -->
-      <aside class="bg-[#1f1533] p-6 rounded-xl shadow-lg space-y-6 text-sm">
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-white text-blue-700 font-bold rounded-full flex items-center justify-center">🕒</div>
-          <div>
-            <div class="uppercase text-gray-400 text-[10px]">Date & Time</div>
-            <div id="currentDateTime" class="text-sm font-semibold"></div>
-          </div>
+    <!-- Sidebar -->
+    <aside class="bg-[#1f1533] p-6 rounded-xl shadow-lg space-y-6 text-sm">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 bg-white text-blue-700 font-bold rounded-full flex items-center justify-center">🕒</div>
+        <div>
+          <div class="uppercase text-gray-400 text-[10px]">Date & Time</div>
+          <div id="currentDateTime" class="text-sm font-semibold"></div>
         </div>
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 border border-white rounded-full flex items-center justify-center">2</div>
-          <div>
-            <div class="uppercase text-gray-400 text-[10px]">Initiator Number</div>
-            <div id="initiatorNumber" class="text-sm font-semibold">Loading...</div>
-          </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 border border-white rounded-full flex items-center justify-center">2</div>
+        <div>
+          <div class="uppercase text-gray-400 text-[10px]">Initiator Number</div>
+          <div id="initiatorNumber" class="text-sm font-semibold">Loading...</div>
         </div>
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 border border-white rounded-full flex items-center justify-center">3</div>
-          <div>
-            <div class="uppercase text-gray-400 text-[10px]">Initiator Name</div>
-            <div id="initiatorName" class="text-sm font-semibold">Loading...</div>
-          </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 border border-white rounded-full flex items-center justify-center">3</div>
+        <div>
+          <div class="uppercase text-gray-400 text-[10px]">Initiator Name</div>
+          <div id="initiatorName" class="text-sm font-semibold">Loading...</div>
         </div>
-      </aside>
+      </div>
+    </aside>
 
+    <!-- Form -->
+    <section class="md:col-span-2 bg-[#261c44] p-8 rounded-xl shadow-xl">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h2 class="text-lg font-bold text-yellow-300">Transaction Details</h2>
+          <p class="text-sm text-gray-300">Fill in your details to continue the payment.</p>
+        </div>
+        <div id="balanceAmount" class="text-sm text-blue-300 font-bold">
+          Balance: GHS 0.00
+        </div>
+      </div>
 
-<!-- Form -->
-<section class="md:col-span-2 bg-[#261c44] p-8 rounded-xl shadow-xl">
-  <div class="flex justify-between items-start mb-6">
-    <div>
-      <h2 class="text-lg font-bold text-yellow-300">Transaction Details</h2>
-      <p class="text-sm text-gray-300">Fill in your details to continue the payment.</p>
-    </div>
-    <div id="balanceAmount" class="text-sm text-blue-300 font-bold">
-      Balance: GHS 0.00
-    </div>
+      <form id="transactionForm" onsubmit="submitTransaction(event)" class="text-sm w-full">
+        <table class="w-full table-auto border-separate border-spacing-y-4 text-left">
+          <tbody>
+            <tr>
+              <td class="pr-4 w-1/2">
+                <input type="text" id="beneficiaryphoneno" name="nameDest" placeholder="Beneficiary Number" class="form-input w-full text-blue-900" required />
+              </td>
+              <td class="w-1/2">
+                <select name="type" class="form-input w-full text-blue-900 bg-white" required>
+                  <option disabled selected class="text-gray-400">Payment Type</option>
+                  <option class="text-blue-900">Transfer</option>
+                  <option class="text-blue-900">Payment</option>
+                  <option class="text-blue-900">Cash In</option>
+                  <option class="text-blue-900">Cash Out</option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="pr-4">
+                <select name="mobilenetwork" class="form-input w-full text-blue-900 bg-white" required>
+                  <option disabled selected class="text-gray-400">Mobile Network</option>
+                  <option class="text-blue-900">MTN</option>
+                  <option class="text-blue-900">Vodafone</option>
+                  <option class="text-blue-900">AirtelTigo</option>
+                </select>
+              </td>
+              <td>
+                <input type="text" id="beneficiaryname" name="beneficiaryname" placeholder="Beneficiary Full Name" class="form-input w-full text-blue-900" readonly />
+              </td>
+            </tr>
+
+            <tr>
+              <td class="pr-4">
+                <input type="number" step="0.01" name="amount" placeholder="Amount (GHS)" class="form-input w-full text-blue-900" required />
+              </td>
+              <td>
+                <input type="text" id="initiatorphoneno" name="initiatorphone" placeholder="Initiator Phone" class="form-input w-full text-blue-900" required />
+              </td>
+            </tr>
+
+            <input type="hidden" name="oldbalanceOrg" id="oldbalanceOrg" />
+            <input type="hidden" name="newbalanceOrig" id="newbalanceOrig" />
+            <input type="hidden" name="newbalanceDest" id="newbalanceDest" />
+            <input type="hidden" name="step" id="step" value="1" />
+
+            <tr>
+              <td colspan="2" class="pt-6">
+                <button type="submit" class="w-full bg-yellow-400 text-black py-2 rounded-md font-semibold hover:bg-yellow-300 transition">
+                  Submit Transaction
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </section>
+
   </div>
+</main>
 
-  <form id="transactionForm" onsubmit="submitTransaction(event)" class="text-sm w-full">
-    <table class="w-full table-auto border-separate border-spacing-y-4 text-left">
-      <tbody>
+<footer class="bg-[#1a112f] py-4 text-center text-sm text-gray-400">
+  &copy; 2025 BentJun Mobile Money Platform Inc. All rights reserved.
+</footer>
 
-        <tr>
-          <td class="pr-4 w-1/2">
-            <input type="text" id="beneficiaryphoneno" name="nameDest" placeholder="Beneficiary Number" class="form-input w-full text-blue-900" required />
-          </td>
-          <td class="w-1/2">
-            <select name="type" class="form-input w-full text-blue-900 bg-white" required>
-              <option disabled selected class="text-gray-400">Payment Type</option>
-              <option class="text-blue-900">Transfer</option>
-              <option class="text-blue-900">Payment</option>
-              <option class="text-blue-900">Cash In</option>
-              <option class="text-blue-900">Cash Out</option>
-            </select>
-          </td>
-        </tr>
-
-        <tr>
-          <td class="pr-4">
-            <select name="mobilenetwork" class="form-input w-full text-blue-900 bg-white" required>
-              <option disabled selected class="text-gray-400">Mobile Network</option>
-              <option class="text-blue-900">MTN</option>
-              <option class="text-blue-900">Vodafone</option>
-              <option class="text-blue-900">AirtelTigo</option>
-            </select>
-          </td>
-          <td>
-            <input type="text" id="beneficiaryname" name="beneficiaryname" placeholder="Beneficiary Full Name" class="form-input w-full text-blue-900" readonly />
-          </td>
-        </tr>
-
-        <tr>
-          <td class="pr-4">
-            <input type="number" step="0.01" name="amount" placeholder="Amount (GHS)" class="form-input w-full text-blue-900" required />
-          </td>
-          <td>
-            <input type="text" id="initiatorphoneno" name="initiatorphone" placeholder="Initiator Phone" class="form-input w-full text-blue-900" required />
-          </td>
-        </tr>
-
-        <!-- Hidden Fields -->
-        <input type="hidden" name="oldbalanceOrg" id="oldbalanceOrg" />
-        <input type="hidden" name="newbalanceOrig" id="newbalanceOrig" />
-        <input type="hidden" name="newbalanceDest" id="newbalanceDest" />
-        <input type="hidden" name="step" id="step" value="1" />
-
-        <tr>
-          <td colspan="2" class="pt-6">
-            <button type="submit" class="w-full bg-yellow-400 text-black py-2 rounded-md font-semibold hover:bg-yellow-300 transition">
-              Submit Transaction
-            </button>
-          </td>
-        </tr>
-
-      </tbody>
-    </table>
-  </form>
-</section>
-
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-[#1a112f] py-4 text-center text-sm text-gray-400">
-    &copy; 2025 BentJun Mobile Money Platform Inc. All rights reserved.
-  </footer>
-  
 <script>
-  const API_BASE_URL = window.location.hostname.includes("localhost")
-    ? "http://127.0.0.1:8000"
-    : "https://fraud-detection-api-xioa.onrender.com";
+const API_BASE_URL = window.location.hostname.includes("localhost")
+  ? "http://127.0.0.1:8000"
+  : "https://fraud-detection-api-xioa.onrender.com";
 
-  setInterval(() => {
-    const now = new Date().toLocaleString();
-    const timeDisplay = document.getElementById("currentDateTime");
-    if (timeDisplay) timeDisplay.textContent = now;
-  }, 1000);
+setInterval(() => {
+  const now = new Date().toLocaleString();
+  document.getElementById("currentDateTime").textContent = now;
+}, 1000);
 
-  function addInputSearchListeners(inputId, onSearch) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
+function addInputSearchListeners(inputId, onSearch) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
 
-    input.addEventListener("blur", () => {
-      if (input.value.trim()) onSearch(input.value.trim());
-    });
+  input.addEventListener("blur", () => {
+    if (input.value.trim()) onSearch(input.value.trim());
+  });
 
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        if (input.value.trim()) {
-          onSearch(input.value.trim());
-          if (inputId === "beneficiaryphoneno") {
-            const initiatorInput = document.getElementById("initiatorphoneno");
-            if (initiatorInput) initiatorInput.focus();
-          }
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (input.value.trim()) {
+        onSearch(input.value.trim());
+        if (inputId === "beneficiaryphoneno") {
+          document.getElementById("initiatorphoneno").focus();
         }
       }
-    });
-  }
-
-  async function fetchBeneficiaryName(phoneNumber) {
-    const nameField = document.getElementById("beneficiaryname");
-    nameField.value = "Searching...";
-    nameField.readOnly = true;
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/validate-beneficiary/${phoneNumber}`);
-      const data = await res.json();
-
-      if (data.success) {
-        nameField.value = data.full_name;
-      } else {
-        nameField.value = "";
-        nameField.placeholder = "Beneficiary not found";
-        nameField.readOnly = false;
-        alert("❌ Beneficiary account not found.");
-      }
-    } catch (err) {
-      console.error("Error fetching beneficiary:", err);
-      nameField.value = "";
-      alert("⚠️ Server error while fetching beneficiary.");
-    }
-  }
-
-  async function fetchInitiatorInfo(phoneNumber) {
-    const initiatorNumberDiv = document.getElementById("initiatorNumber");
-    const initiatorNameDiv = document.getElementById("initiatorName");
-    const balanceDisplay = document.getElementById("balanceAmount");
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/validate_initiator/${phoneNumber}`);
-      const data = await res.json();
-
-      if (data.success) {
-        const balance = parseFloat(data.balance).toFixed(2);
-        if (initiatorNumberDiv) initiatorNumberDiv.textContent = phoneNumber;
-        if (initiatorNameDiv) initiatorNameDiv.textContent = data.full_name || "Name not available";
-        if (balanceDisplay) balanceDisplay.innerText = `Balance: GHS ${balance}`;
-
-        document.getElementById("oldbalanceOrg").value = balance;
-        document.getElementById("newbalanceOrig").value = balance;
-      } else {
-        initiatorNumberDiv.textContent = "Not Found";
-        initiatorNameDiv.textContent = "Not Found";
-        balanceDisplay.innerText = "Balance: GHS 0.00";
-        alert("Initiator not found.");
-      }
-    } catch (err) {
-      console.error("Error fetching initiator:", err);
-      initiatorNumberDiv.textContent = "Error";
-      initiatorNameDiv.textContent = "Error";
-      balanceDisplay.innerText = "Balance: GHS 0.00";
-      alert("Server error while fetching initiator.");
-    }
-  }
-
-  function resetFormState(form) {
-    form.reset();
-    document.getElementById("initiatorNumber").textContent = "";
-    document.getElementById("initiatorName").textContent = "";
-    document.getElementById("balanceAmount").innerText = "Balance: GHS 0.00";
-    document.getElementById("beneficiaryname").value = "";
-    document.getElementById("oldbalanceOrg").value = "";
-    document.getElementById("newbalanceOrig").value = "";
-    document.getElementById("newbalanceDest").value = "";
-  }
-
-  async function submitTransaction(event) {
-    event.preventDefault();
-
-    const form = event.target;
-    if (form.dataset.submitting === "true") return;
-    form.dataset.submitting = "true";
-
-    const amount = parseFloat(form.amount.value);
-    const oldbalanceOrg = parseFloat(document.getElementById("oldbalanceOrg").value || "0");
-    const newbalanceOrig = oldbalanceOrg - amount;
-    const oldbalanceDest = parseFloat(document.getElementById("newbalanceDest").value || "0");
-    const newbalanceDest = oldbalanceDest + amount;
-
-    document.getElementById("newbalanceOrig").value = newbalanceOrig;
-    document.getElementById("newbalanceDest").value = newbalanceDest;
-
-    const transactionData = {
-      step: parseInt(document.getElementById("step").value),
-      trxdate: new Date().toISOString(),
-      type: form.type.value.toUpperCase(),
-      amount,
-      nameOrig: form.initiatorphone.value,
-      oldbalanceOrg,
-      newbalanceOrig,
-      nameDest: form.nameDest.value,
-      beneficiaryname: form.beneficiaryname.value,
-      oldbalanceDest,
-      newbalanceDest,
-      mobilenetwork: form.mobilenetwork.value,
-      latitude: 5.6037,
-      longitude: -0.1870
-    };
-
-    const submitBtn = form.querySelector("button[type='submit']");
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Processing...";
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/predict`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transactionData)
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        const { status, is_fraud } = data;
-        alert(`✅ Transaction was ${status}`);
-
-        if (!is_fraud && status === "SUCCESSFUL") {
-          document.getElementById("balanceAmount").innerText = `Balance: GHS ${newbalanceOrig.toFixed(2)}`;
-          resetFormState(form);
-        }
-      } else {
-        alert(data.detail || "❌ Prediction failed. Please check input.");
-      }
-    } catch (err) {
-      console.error("Transaction error:", err);
-      alert("⚠️ Server error occurred.");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit";
-      form.dataset.submitting = "false";
-    }
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    addInputSearchListeners("beneficiaryphoneno", fetchBeneficiaryName);
-    document.getElementById("beneficiaryphoneno").addEventListener("input", () => {
-      const nameField = document.getElementById("beneficiaryname");
-      nameField.value = "";
-      nameField.placeholder = "Fetching name...";
-      nameField.readOnly = true;
-    });
-
-    const initiatorInput = document.getElementById("initiatorphoneno");
-    if (initiatorInput) {
-      initiatorInput.addEventListener("blur", () => {
-        if (initiatorInput.value.trim()) {
-          fetchInitiatorInfo(initiatorInput.value.trim());
-        }
-      });
     }
   });
+}
+
+async function fetchBeneficiaryName(phoneNumber) {
+  const nameField = document.getElementById("beneficiaryname");
+  nameField.value = "Searching...";
+  try {
+    const res = await fetch(`${API_BASE_URL}/validate-beneficiary/${phoneNumber}`);
+    const data = await res.json();
+    if (data.success) {
+      nameField.value = data.full_name;
+    } else {
+      nameField.value = "";
+      nameField.placeholder = "Beneficiary not found";
+      alert("❌ Beneficiary account not found.");
+    }
+  } catch (err) {
+    console.error("Error fetching beneficiary:", err);
+    nameField.value = "";
+    alert("⚠️ Server error while fetching beneficiary.");
+  }
+}
+
+async function fetchInitiatorInfo(phoneNumber) {
+  const initiatorNumberDiv = document.getElementById("initiatorNumber");
+  const initiatorNameDiv = document.getElementById("initiatorName");
+  const balanceDisplay = document.getElementById("balanceAmount");
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/validate_initiator/${phoneNumber}`);
+    const data = await res.json();
+
+    if (data.success) {
+      const balance = parseFloat(data.balance).toFixed(2);
+      initiatorNumberDiv.textContent = phoneNumber;
+      initiatorNameDiv.textContent = data.full_name || "Name not available";
+      balanceDisplay.innerText = `Balance: GHS ${balance}`;
+      document.getElementById("oldbalanceOrg").value = balance;
+      document.getElementById("newbalanceOrig").value = balance;
+    } else {
+      initiatorNumberDiv.textContent = "Not Found";
+      initiatorNameDiv.textContent = "Not Found";
+      balanceDisplay.innerText = "Balance: GHS 0.00";
+      alert("Initiator not found.");
+    }
+  } catch (err) {
+    console.error("Error fetching initiator:", err);
+    initiatorNumberDiv.textContent = "Error";
+    initiatorNameDiv.textContent = "Error";
+    balanceDisplay.innerText = "Balance: GHS 0.00";
+    alert("Server error while fetching initiator.");
+  }
+}
+
+function resetFormState(form) {
+  form.reset();
+  document.getElementById("initiatorNumber").textContent = "";
+  document.getElementById("initiatorName").textContent = "";
+  document.getElementById("balanceAmount").innerText = "Balance: GHS 0.00";
+  document.getElementById("beneficiaryname").value = "";
+  document.getElementById("oldbalanceOrg").value = "";
+  document.getElementById("newbalanceOrig").value = "";
+  document.getElementById("newbalanceDest").value = "";
+}
+
+async function submitTransaction(event) {
+  event.preventDefault();
+  const form = event.target;
+  if (form.dataset.submitting === "true") return;
+  form.dataset.submitting = "true";
+
+  const amount = parseFloat(form.amount.value);
+  const oldbalanceOrg = parseFloat(document.getElementById("oldbalanceOrg").value || "0");
+  const newbalanceOrig = oldbalanceOrg - amount;
+  const oldbalanceDest = parseFloat(document.getElementById("newbalanceDest").value || "0");
+  const newbalanceDest = oldbalanceDest + amount;
+
+  document.getElementById("newbalanceOrig").value = newbalanceOrig;
+  document.getElementById("newbalanceDest").value = newbalanceDest;
+
+  const transactionData = {
+    step: parseInt(document.getElementById("step").value),
+    trxdate: new Date().toISOString(),
+    type: form.type.value.toUpperCase(),
+    amount,
+    nameOrig: form.initiatorphone.value,
+    oldbalanceOrg,
+    newbalanceOrig,
+    nameDest: form.nameDest.value,
+    beneficiaryname: form.beneficiaryname.value,
+    oldbalanceDest,
+    newbalanceDest,
+    mobilenetwork: form.mobilenetwork.value,
+    latitude: 5.6037,
+    longitude: -0.1870
+  };
+
+  const submitBtn = form.querySelector("button[type='submit']");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Processing...";
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/predict`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(transactionData)
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      const { status, is_fraud } = data;
+      alert(`✅ Transaction was ${status}`);
+      if (!is_fraud && status === "SUCCESSFUL") {
+        document.getElementById("balanceAmount").innerText = `Balance: GHS ${newbalanceOrig.toFixed(2)}`;
+        resetFormState(form);
+      }
+    } else {
+      alert(data.detail || "❌ Prediction failed. Please check input.");
+    }
+  } catch (err) {
+    console.error("Transaction error:", err);
+    alert("⚠️ Server error occurred.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Submit";
+    form.dataset.submitting = "false";
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  addInputSearchListeners("beneficiaryphoneno", fetchBeneficiaryName);
+  document.getElementById("beneficiaryphoneno").addEventListener("input", () => {
+    const nameField = document.getElementById("beneficiaryname");
+    nameField.value = "";
+    nameField.placeholder = "Fetching name...";
+  });
+  document.getElementById("initiatorphoneno").addEventListener("blur", function () {
+    if (this.value.trim()) fetchInitiatorInfo(this.value.trim());
+  });
+});
 </script>
 
+</body>
 </html>
